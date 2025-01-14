@@ -1,5 +1,5 @@
 from typing_extensions import Annotated, Dict
-from fastapi import APIRouter, Query, Depends
+from fastapi import APIRouter, Query, Depends, HTTPException
 from schemas.delivery import TotalDeliveryPrice
 from services.api import fetch_full_venue_data
 from services.delivery import (
@@ -16,7 +16,7 @@ router = APIRouter()
 def get_delivery_order_price(
     cart_value: Annotated[
         int,
-        Query(gt=0)
+        Query()
     ],
     user_lat: Annotated[
         float,

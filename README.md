@@ -43,3 +43,11 @@ Returns:
   }
 }
 ```
+
+## Running unit tests
+
+Make sure you are using venv and that you run the command at the root.
+
+```bash
+python -m pytest
+```

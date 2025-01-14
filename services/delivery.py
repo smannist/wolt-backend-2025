@@ -1,3 +1,4 @@
+from fastapi import HTTPException
 from geopy.distance import distance
 
 def get_distance_range(distance: float, distance_ranges: list[dict]) -> dict:
@@ -17,7 +18,10 @@ def get_distance_range(distance: float, distance_ranges: list[dict]) -> dict:
         if min_distance <= distance < max_distance:
             return range_item
 
-    raise ValueError(f"Distance is out of delivery range.")
+    raise HTTPException(
+            status_code=400,
+            detail="We are sorry, this location is currently outside our delivery range."
+        )
 
 def calculate_distance(lon1: float, lat1: float, lon2: float, lat2: float) -> int:
     """Calculates the delivery distance in meters using the geopy library which utilizes Haversine formula
@@ -70,4 +74,9 @@ def calculate_total_price(delivery_fee: int, cart_value: int, surcharge: int) ->
     Returns:
     - The total delivery price
     """
+    if cart_value <= 0:
+        raise HTTPException(
+            status_code=400,
+            detail="The cart is empty!"
+        )
     return delivery_fee + cart_value + surcharge

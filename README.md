@@ -11,14 +11,16 @@ There are two versions:
 
 ## Docker version
 
-You might need root user access for these commands (such as sudo)
+You might need root user access for the command to work (e.g. using sudo)
 
 ```bash
-docker build . -t dopc
+docker-compose up --build
 ```
 
+or run the server in detached mode in the background
+
 ```bash
-docker run -p 8000:8000 dopc
+docker-compose up -d --build
 ```
 
 ## Manual version

@@ -2,11 +2,28 @@
 
 My DOPC API solution for a chance to get an interview with the best Finnish company ever created.
 
-# Setting up
+## Setting up
 
-Follow the instructions below to setup the server.
+There are two versions:
 
-## Create and run the virtual environment
+1. Docker version: you have Docker installed (or you want to install it) - this is the painless way
+2. Manual version: if you like to suffer (or hate Docker for some reason)
+
+## Docker version
+
+You might need root user access for these commands (such as sudo)
+
+```bash
+docker build . -t dopc
+```
+
+```bash
+docker run -p 8000:8000 dopc
+```
+
+## Manual version
+
+### Create and run the virtual environment
 
 ```bash
 python3 -m venv venv
@@ -16,13 +33,13 @@ python3 -m venv venv
 source venv/bin/activate
 ```
 
-## Install requirements
+### Install requirements
 
 ```bash
 pip install -r requirements.txt
 ```
 
-## Run the FastAPI server
+### Run the FastAPI server
 
 ```bash
 fastapi run main.py

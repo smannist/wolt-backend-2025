@@ -1,6 +1,6 @@
 # Setting up
 
-### Create and run the virtual environment
+## Create and run the virtual environment
 
 ```bash
 python3 -m venv venv
@@ -10,13 +10,13 @@ python3 -m venv venv
 source venv/bin/activate
 ```
 
-### Install requirements
+## Install requirements
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### Run the Fastapi server
+## Run the FastAPI server
 
 ```bash
 fastapi run main.py
@@ -24,9 +24,9 @@ fastapi run main.py
 
 # FastAPI docs
 
-One of great features of FastAPI is its automatic doc generation which can be viewed via Swagger UI. Once the server is running, you can access the UI by navigation to http://0.0.0.0:8000/docs from your browser. The doc includes detailed information about the /api/v1/delivery-order-price endpoint, such as all accepted query parameters and their ranges. Instead of manually curling the endpoint (as seen in next example), it's also possible to test the endpoint through the docs.
+One of great features of FastAPI is its automatic doc generation which can be viewed via Swagger UI. Once the server is running, you can access the UI by navigation to http://0.0.0.0:8000/docs from your browser. The doc includes detailed information about the /api/v1/delivery-order-price endpoint, such as all accepted query parameters and their ranges, and possible HTTP status codes. Instead of manually curling the endpoint (as seen in next example) it's also possible to test the endpoint through the docs.
 
-### Using curl to test delivery-order-price endpoint
+## Using curl to test delivery-order-price endpoint
 
 First make sure that the server is running. You can then use CMD and curl to test the functionality of the endpoint by using the parameters described in FastAPI's docs.
 
@@ -52,23 +52,22 @@ Returns:
 
 # Testing
 
+Make sure you are in virtual environment (check "Create and run the virtual environment" section how to enter venv) and that you run the command(s) from the root.
+
 ## Running unit tests
 
-Make sure you are in virtual environment (check "Create and run the virtual environment" section) and that you run the command from the root.
-
 ```bash
-python -m pytest tests/unit
-
+pytest tests/unit
 ```
 
 ## Running integration tests
 
 ```bash
-python -m pytest tests/integration
+pytest tests/integration
 ```
 
 ## Or simply run both
 
 ```bash
-python -m pytest
+pytest
 ```

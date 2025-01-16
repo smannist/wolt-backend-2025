@@ -1,6 +1,6 @@
 from typing_extensions import Annotated, Dict
 from fastapi import APIRouter, Query, Depends
-from schemas.delivery import TotalDeliveryPrice
+from schemas.delivery import DeliveryOrderSummary
 from services.api import fetch_full_venue_data
 from services.delivery import (
     get_distance_range, 
@@ -12,7 +12,52 @@ from services.delivery import (
 
 router = APIRouter()
 
-@router.get("/api/v1/delivery-order-price", response_model=TotalDeliveryPrice)
+@router.get("/api/v1/delivery-order-price", response_model=DeliveryOrderSummary, responses={
+    200: {
+        "description": "Success",
+        "content": {
+            "application/json": {
+                "example": {
+                    "total_price": 1190,
+                    "small_order_surcharge": 0,
+                    "cart_value": 1000,
+                    "delivery": {
+                        "fee": 190,
+                        "distance": 177
+                        }
+                    }
+                }
+            },
+        },
+    400: {
+            "description": "Bad request",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "detail": "We are sorry, this location is currently outside our delivery range."
+                    },
+                },
+            },
+        },
+    422: {
+            "description": "Validation error or missing parameters",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "status": "error",
+                        "error_count": 1,
+                        "errors": [
+                            {
+                            "field": "query.user_lon",
+                            "error_type": "missing",
+                            "message": "user_lon is required."
+                            },
+                        ]
+                    }
+                }
+            },
+        },
+})
 async def get_delivery_order_price(
     cart_value: Annotated[
         int,
@@ -29,12 +74,6 @@ async def get_delivery_order_price(
     venue_data: Dict[str, Dict] = Depends(fetch_full_venue_data), # inheritely leverages param ?venue_slug=.... 
 ):
     """Fetches a delivery order price based on the venue, cart value, and user location.
-
-    Query parameters:
-      - venue_slug: a valid venue slug, 'home-assignment-venue-helsinki', 'home-assignment-venue-stockholm', 'home-assignment-venue-berlin' or 'home-assignment-venue-tokyo'.
-      - cart_value: total cart value, positive integer.
-      - user_lat: user latitude, between -90 and 90 degrees.
-      - user_lon: user longitude, between -180 and 180 degrees.
 
     Example usage:
     ```

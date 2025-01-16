@@ -68,7 +68,7 @@ def test_total_price_is_calculated_correctly_with_valid_values():
     surcharge = 800
     assert calculate_total_price(delivery_fee, cart_value, surcharge) == 2600
 
-def test_user_is_notified_of_empty_cart():
+def test_empty_cart_raises_correct_exception():
     """Tests that the correct exception is raised when the cart is empty."""
     delivery_fee = 300
     cart_value = 0
@@ -80,7 +80,7 @@ def test_user_is_notified_of_empty_cart():
     else:
         assert False, "Expected HTTPException for empty cart."
 
-def test_notify_out_of_delivery_range_when_distance_is_clearly_out_of_delivery_range():
+def test_greatly_out_of_delivery_range_raises_correct_exception():
     """Tests that the correct exception is raised when the distance is greater than delivery range with large distance difference."""
     try:
         get_distance_range(20000, DISTANCE_RANGES)
@@ -89,7 +89,7 @@ def test_notify_out_of_delivery_range_when_distance_is_clearly_out_of_delivery_r
     else:
         assert False, "Expected HTTPException for out-of-range distance."
 
-def test_notify_out_of_delivery_range_when_distance_is_exactly_out_of_delivery_range():
+def test_exactly_out_of_delivery_range_raises_correct_exception():
     """Tests that the correct exception is raised when the distance is exactly within unaccepted delivery range."""
     try:
         get_distance_range(10000, DISTANCE_RANGES)

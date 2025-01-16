@@ -13,38 +13,36 @@ There are two versions:
 
 You might need root user access for the commands to work (e.g. using sudo)
 
+Build the container
+
 ```bash
 docker build . -t dopc
 ```
 
-```bash
-docker run -p 8000:8000 dopc
-```
-
-or in detached mode in the background
+Start the container in background (detached mode)
 
 ```bash
-docker run -d -p 8000:8000 dopc
+docker run -d -p 8000:8000 --name dopc dopc
 ```
 
-With Docker you can also run the tests by using following commands
+### Running tests (make sure the container is running in the background)
 
 unit:
 
 ```bash
-docker run --rm dopc pytest tests/unit
+docker exec -it dopc pytest /tests/unit
 ```
 
 integration:
 
 ```bash
-docker run --rm dopc pytest tests/integration
+docker exec -it dopc pytest /tests/integration
 ```
 
 everything:
 
 ```bash
-docker run --rm dopc pytest tests/
+docker exec -it dopc pytest /tests/
 ```
 
 ## 2. Manual version
@@ -69,6 +67,28 @@ pip install -r requirements.txt
 
 ```bash
 fastapi run main.py
+```
+
+### Testing
+
+Make sure you are in virtual environment (check "Create and run the virtual environment" section how to enter venv) and that you run the command(s) from the root.
+
+unit:
+
+```bash
+pytest tests/unit
+```
+
+integration:
+
+```bash
+pytest tests/integration
+```
+
+everything:
+
+```bash
+pytest
 ```
 
 ## FastAPI docs and usage
@@ -97,26 +117,4 @@ Returns:
     "distance": 177
   }
 }
-```
-
-## Testing
-
-Make sure you are in virtual environment (check "Create and run the virtual environment" section how to enter venv) and that you run the command(s) from the root.
-
-### Running unit tests
-
-```bash
-pytest tests/unit
-```
-
-### Running integration tests
-
-```bash
-pytest tests/integration
-```
-
-### Or simply run both
-
-```bash
-pytest
 ```

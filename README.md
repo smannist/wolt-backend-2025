@@ -9,7 +9,7 @@ There are two versions:
 1. Docker version: you have Docker installed (or you want to install it) - this is the painless way
 2. Manual version: if you like to suffer (or hate Docker for some reason)
 
-## Docker version
+## 1. Docker version
 
 You might need root user access for the commands to work (e.g. using sudo)
 
@@ -47,7 +47,7 @@ everything:
 docker run --rm dopc pytest tests/
 ```
 
-## Manual version
+## 2. Manual version
 
 ### Create and run the virtual environment
 

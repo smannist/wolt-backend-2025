@@ -1,6 +1,10 @@
+# DOPC
+
+My DOPC API solution for a chance to get an interview with the best Finnish company ever created.
+
 # Setting up
 
-My solution for a chance to get an interview with the best Finnish company ever created.
+Follow the instructions below to setup the server.
 
 ## Create and run the virtual environment
 

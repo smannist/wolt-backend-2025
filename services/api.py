@@ -6,15 +6,15 @@ BASE_URL = "https://consumer-api.development.dev.woltapi.com/home-assignment-api
 
 def fetch_static_venue_data(venue_slug: str) -> dict:
     """Fetches static data about a venue."""
-    static_url = f"{BASE_URL}/{venue_slug}/static"
-    response = requests.get(static_url)
+    url = f"{BASE_URL}/{venue_slug}/static"
+    response = requests.get(url)
     response.raise_for_status()
     return response.json()
 
 def fetch_dynamic_venue_data(venue_slug: str) -> dict:
     """Fetches dynamic data about a venue."""
-    dynamic_url = f"{BASE_URL}/{venue_slug}/dynamic"
-    response = requests.get(dynamic_url)
+    url = f"{BASE_URL}/{venue_slug}/dynamic"
+    response = requests.get(url)
     response.raise_for_status()
     return response.json()
 

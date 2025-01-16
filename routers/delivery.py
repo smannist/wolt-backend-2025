@@ -1,5 +1,5 @@
 from typing_extensions import Annotated, Dict
-from fastapi import APIRouter, Query, Depends, HTTPException
+from fastapi import APIRouter, Query, Depends
 from schemas.delivery import TotalDeliveryPrice
 from services.api import fetch_full_venue_data
 from services.delivery import (
@@ -13,10 +13,10 @@ from services.delivery import (
 router = APIRouter()
 
 @router.get("/api/v1/delivery-order-price", response_model=TotalDeliveryPrice)
-def get_delivery_order_price(
+async def get_delivery_order_price(
     cart_value: Annotated[
         int,
-        Query()
+        Query(ge=0)
     ],
     user_lat: Annotated[
         float,
@@ -31,14 +31,14 @@ def get_delivery_order_price(
     """Fetches a delivery order price based on the venue, cart value, and user location.
 
     Query parameters:
-      - venue_slug: a valid venue slug.
-      - cart_value: total cart value (must be a positive integer).
-      - user_lat: user latitude, between -90 and 90.
-      - user_lon: user longitude, between -180 and 180.
+      - venue_slug: a valid venue slug, 'home-assignment-venue-helsinki', 'home-assignment-venue-stockholm', 'home-assignment-venue-berlin' or 'home-assignment-venue-tokyo'.
+      - cart_value: total cart value, positive integer.
+      - user_lat: user latitude, between -90 and 90 degrees.
+      - user_lon: user longitude, between -180 and 180 degrees.
 
     Example usage:
     ```
-    GET /api/v1/delivery-order-price?venue_slug=home-assignment-venue-helsinki&cart_value=1000&user_lat=60.17094&user_lon=24.93087
+    curl "http://localhost:8000/api/v1/delivery-order-price?venue_slug=home-assignment-venue-helsinki&cart_value=1000&user_lat=60.17094&user_lon=24.93087"
     ```
 
     Returns:

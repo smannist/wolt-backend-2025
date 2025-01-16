@@ -30,7 +30,7 @@ One of great features of FastAPI is its automatic doc generation which can be vi
 
 ### Using curl to test delivery-order-price endpoint
 
-First make sure that the server is running. You can then use CMD and curl to test the functionality of the endpoint by using the parameters described in DOPC API endpoints.
+First make sure that the server is running. You can then use CMD and curl to test the functionality of the endpoint by using the parameters described in FastAPI's docs.
 
 Example:
 

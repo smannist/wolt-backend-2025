@@ -1,5 +1,7 @@
 # Setting up
 
+My solution for a chance to get an interview with the best Finnish company ever created.
+
 ## Create and run the virtual environment
 
 ```bash

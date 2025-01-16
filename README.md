@@ -26,7 +26,7 @@ fastapi run main.py
 
 ## FastAPI docs
 
-One of great features of FastAPI is its automatic doc generation which can be viewed via Swagger UI. Once the server is running, you can access the UI by navigation to http://0.0.0.0:8000/docs from your browser. The doc includes detailed information about the /api/v1/delivery-order-price endpoint (as seen in next example), such as all accepted query parameters and their ranges. Instead of manually curling the endpoint, it's also possible to test the endpoint through the docs.
+One of great features of FastAPI is its automatic doc generation which can be viewed via Swagger UI. Once the server is running, you can access the UI by navigation to http://0.0.0.0:8000/docs from your browser. The doc includes detailed information about the /api/v1/delivery-order-price endpoint, such as all accepted query parameters and their ranges. Instead of manually curling the endpoint (as seen in next example), it's also possible to test the endpoint through the docs.
 
 ### Using curl to test delivery-order-price endpoint
 

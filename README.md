@@ -11,16 +11,40 @@ There are two versions:
 
 ## Docker version
 
-You might need root user access for the command to work (e.g. using sudo)
+You might need root user access for the commands to work (e.g. using sudo)
 
 ```bash
-docker-compose up --build
+docker build . -t dopc
 ```
 
-or run the server in detached mode in the background
+```bash
+docker run -p 8000:8000 dopc
+```
+
+or in detached mode in the background
 
 ```bash
-docker-compose up -d --build
+docker run -d -p 8000:8000 dopc
+```
+
+With Docker you can also run the tests by using following commands
+
+unit:
+
+```bash
+docker run --rm dopc pytest tests/unit
+```
+
+integration:
+
+```bash
+docker run --rm dopc pytest tests/integration
+```
+
+everything:
+
+```bash
+docker run --rm dopc pytest tests/
 ```
 
 ## Manual version

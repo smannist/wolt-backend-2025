@@ -1,6 +1,0 @@
-services:
-  dopc:
-    build: .
-    container_name: dopc
-    ports:
-      - "8000:8000"

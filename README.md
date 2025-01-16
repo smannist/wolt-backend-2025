@@ -1,6 +1,4 @@
-# DOPC API
-
-## Setting up
+# Setting up
 
 ### Create and run the virtual environment
 
@@ -24,7 +22,7 @@ pip install -r requirements.txt
 fastapi run main.py
 ```
 
-## FastAPI docs
+# FastAPI docs
 
 One of great features of FastAPI is its automatic doc generation which can be viewed via Swagger UI. Once the server is running, you can access the UI by navigation to http://0.0.0.0:8000/docs from your browser. The doc includes detailed information about the /api/v1/delivery-order-price endpoint, such as all accepted query parameters and their ranges. Instead of manually curling the endpoint (as seen in next example), it's also possible to test the endpoint through the docs.
 
@@ -52,9 +50,24 @@ Returns:
 }
 ```
 
+# Testing
+
 ## Running unit tests
 
 Make sure you are in virtual environment (check "Create and run the virtual environment" section) and that you run the command from the root.
+
+```bash
+python -m pytest tests/unit
+
+```
+
+## Running integration tests
+
+```bash
+python -m pytest tests/integration
+```
+
+## Or simply run both
 
 ```bash
 python -m pytest

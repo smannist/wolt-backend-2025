@@ -42,19 +42,11 @@ router = APIRouter()
         },
     },
     422: {
-        "description": "Validation error or missing parameters",
+        "description": "Validation error, missing parameters or invalid venue",
         "content": {
             "application/json": {
                 "example": {
-                    "status": "error",
-                    "error_count": 1,
-                    "errors": [
-                        {
-                            "field": "query.user_lon",
-                            "error_type": "missing",
-                            "message": "user_lon is required."
-                        },
-                    ]
+                    "detail": "Missing query parameters: user_lon, user_lat"
                 }
             }
         },

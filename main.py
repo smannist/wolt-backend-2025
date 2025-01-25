@@ -45,11 +45,12 @@ app.add_exception_handler(
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(
         _: Request, exc: RequestValidationError):
-    missing_params = [param["loc"][1]
-                      for param in exc.errors() if param["type"] == "missing"]
-
-    invalid_values_set = {
-        param["input"] for param in exc.errors() if param["type"] == "literal_error"}
+    missing_params = [
+        param["loc"][1] for param in exc.errors() if param["type"] == "missing"
+    ]
+    invalid_venue = {
+        param["input"] for param in exc.errors() if param["type"] == "literal_error"
+    }
 
     error_messages = []
     if missing_params:
@@ -57,10 +58,10 @@ async def validation_exception_handler(
             f"Missing query parameters: {
                 ', '.join(missing_params)}"
             )
-    if invalid_values_set:
+    if invalid_venue:
         error_messages.append(
             f"Invalid venue: {
-                ", ".join(invalid_values_set)}"
+                ", {invalid_venue}"}"
             )
 
     return JSONResponse(

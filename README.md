@@ -13,16 +13,10 @@ There are two versions:
 
 You might need root user access for the commands to work (e.g. using sudo)
 
-Build the container
+Build and start the app
 
 ```bash
-docker build . -t dopc
-```
-
-Start the container in background (detached mode)
-
-```bash
-docker run -d -p 8000:8000 --name dopc dopc
+docker compose up
 ```
 
 While the container is running you can curl the endpoint to test its functionality

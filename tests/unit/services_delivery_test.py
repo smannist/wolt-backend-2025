@@ -1,4 +1,4 @@
-from fastapi import HTTPException
+from exceptions import OutOfRangeException, EmptyCartException
 from services.delivery import (
     get_distance_range,
     calculate_delivery_fee,
@@ -84,27 +84,27 @@ def test_empty_cart_raises_correct_exception():
     surcharge = 800
     try:
         calculate_total_price(delivery_fee, cart_value, surcharge) == 2600
-    except HTTPException as e:
+    except EmptyCartException as e:
         assert e.detail == "The cart is empty!"
     else:
-        assert False, "Expected HTTPException for empty cart."
+        assert False, "Expected EmptyCartException for empty cart."
 
 
 def test_greatly_out_of_delivery_range_raises_correct_exception():
     """Tests that the correct exception is raised when the distance is greater than delivery range with large distance difference."""
     try:
         get_distance_range(20000, DISTANCE_RANGES)
-    except HTTPException as e:
+    except OutOfRangeException as e:
         assert e.detail == "We are sorry, this location is currently outside our delivery range."
     else:
-        assert False, "Expected HTTPException for out-of-range distance."
+        assert False, "Expected OutOfRangeException for out-of-range distance."
 
 
 def test_exactly_out_of_delivery_range_raises_correct_exception():
     """Tests that the correct exception is raised when the distance is exactly within unaccepted delivery range."""
     try:
         get_distance_range(10000, DISTANCE_RANGES)
-    except HTTPException as e:
+    except OutOfRangeException as e:
         assert e.detail == "We are sorry, this location is currently outside our delivery range."
     else:
-        assert False, "Expected HTTPException for out-of-range distance."
+        assert False, "Expected OutOfRangeException for out-of-range distance."

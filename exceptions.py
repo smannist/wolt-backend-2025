@@ -1,4 +1,14 @@
 from typing import List, Dict, Any
+from fastapi import HTTPException
+
+
+class OutOfRangeException(HTTPException):
+    pass
+
+
+class EmptyCartException(HTTPException):
+    pass
+
 
 def format_validation_error(error: Dict[str, Any]) -> Dict[str, Any]:
     """Formats a single validation error into a more readable format."""
@@ -11,15 +21,19 @@ def format_validation_error(error: Dict[str, Any]) -> Dict[str, Any]:
     }
 
     error_type = error.get("type", "")
-    custom_msg = error_type_messages.get(error_type, error.get("msg", "Unknown error"))
-    
+
+    custom_msg = error_type_messages.get(
+        error_type, error.get("msg", "Unknown error"))
+
     return {
         "field": field_path,
         "error_type": error_type,
         "message": custom_msg
     }
 
-def format_all_errors(errors: List[Dict[str, Any]]) -> Dict[str, Any]:
+
+def format_all_validation_errors(
+        errors: List[Dict[str, Any]]) -> Dict[str, Any]:
     """Formats all validation errors into a more readable format."""
     formatted_errors = [format_validation_error(error) for error in errors]
 

@@ -1,4 +1,4 @@
-from fastapi import HTTPException
+from exceptions import OutOfRangeException, EmptyCartException
 from geopy.distance import distance
 
 
@@ -18,8 +18,7 @@ def get_distance_range(distance: float, distance_ranges: list[dict]) -> dict:
 
         if min_distance <= distance < max_distance:
             return range_item
-
-    raise HTTPException(
+    raise OutOfRangeException(
         status_code=400,
         detail="We are sorry, this location is currently outside our delivery range.")
 
@@ -92,7 +91,7 @@ def calculate_total_price(
     - The total delivery price
     """
     if cart_value <= 0:
-        raise HTTPException(
+        raise EmptyCartException(
             status_code=400,
             detail="The cart is empty!"
         )

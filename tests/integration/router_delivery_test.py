@@ -5,7 +5,8 @@ def test_endpoint_returns_correct_error_with_all_missing_query_parameters(
     response = test_client.get("/api/v1/delivery-order-price")
     assert response.status_code == 422
     assert response.json() == {
-        "detail": "Missing query parameters: venue_slug, venue_slug, cart_value, user_lat, user_lon"}
+        "detail": "Missing query parameters: venue_slug, venue_slug, cart_value, user_lat, user_lon"
+    }
 
 
 def test_endpoint_returns_correct_error_with_missing_query_user_lon_param(
@@ -53,7 +54,8 @@ def test_return_out_of_range_delivery_error(test_client):
         "/api/v1/delivery-order-price?venue_slug=home-assignment-venue-helsinki&cart_value=1000&user_lat=60.17094&user_lon=21.93087")
     assert response.status_code == 400
     assert response.json() == {
-        "detail": "We are sorry, this location is currently outside our delivery range."}
+        "detail": "We are sorry, this location is currently outside our delivery range."
+    }
 
 
 def test_return_empty_cart_error(test_client):

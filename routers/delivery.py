@@ -72,8 +72,8 @@ async def get_delivery_order_price(
         float,
         Query(ge=-180, le=180)
     ],
-    venue_location: Dict[Any, Dict] = Depends(fetch_venue_coordinates),
-    venue_pricing: Dict[Any, Dict] = Depends(fetch_venue_dynamic_pricing)
+    VenueLocation: Dict[Any, Dict] = Depends(fetch_venue_coordinates),
+    VenuePricing: Dict[Any, Dict] = Depends(fetch_venue_dynamic_pricing)
 ):
     """Fetches a delivery order price based on the venue, cart value, and user location.
 
@@ -86,17 +86,18 @@ async def get_delivery_order_price(
       - JSON containing the final total price, small order surcharge, cart value, and delivery details (fee, distance).
     """
     surcharge = calculate_surcharge(
-        venue_pricing["order_minimum_no_surcharge"], cart_value)
+        VenuePricing.order_minimum_no_surcharge, cart_value)
 
     distance = calculate_distance(
         user_lon,
         user_lat,
-        venue_location[0],
-        venue_location[1])
+        VenueLocation.lon,
+        VenueLocation.lat
+    )
 
     delivery_fee = calculate_delivery_fee(
-        venue_pricing["base_price"], distance, get_distance_range(
-            distance, venue_pricing["distance_ranges"]))
+        VenuePricing.base_price, distance, get_distance_range(
+            distance, VenuePricing.distance_ranges))
 
     total_price = calculate_total_price(delivery_fee, cart_value, surcharge)
 

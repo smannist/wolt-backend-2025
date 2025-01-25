@@ -1,6 +1,7 @@
 from fastapi import HTTPException
 from geopy.distance import distance
 
+
 def get_distance_range(distance: float, distance_ranges: list[dict]) -> dict:
     """Finds the appropriate distance range for the given distance.
 
@@ -19,11 +20,15 @@ def get_distance_range(distance: float, distance_ranges: list[dict]) -> dict:
             return range_item
 
     raise HTTPException(
-            status_code=400,
-            detail="We are sorry, this location is currently outside our delivery range."
-        )
+        status_code=400,
+        detail="We are sorry, this location is currently outside our delivery range.")
 
-def calculate_distance(lon1: float, lat1: float, lon2: float, lat2: float) -> int:
+
+def calculate_distance(
+        lon1: float,
+        lat1: float,
+        lon2: float,
+        lat2: float) -> int:
     """Calculates the delivery distance in meters using the geopy library which utilizes Haversine formula
        and rounds the result to the nearest integer.
 
@@ -36,9 +41,10 @@ def calculate_distance(lon1: float, lat1: float, lon2: float, lat2: float) -> in
     """
     return round(distance((lat1, lon1), (lat2, lon2)).meters)
 
+
 def calculate_delivery_fee(
-    base_price: int, 
-    distance: float, 
+    base_price: int,
+    distance: float,
     distance_range: dict
 ) -> float:
     """Calculates the delivery fee using the given formula:
@@ -52,12 +58,19 @@ def calculate_delivery_fee(
     Returns:
     - The calculated delivery fee rounded to the nearest integer.
     """
-    return round(base_price + distance_range["a"] + (distance_range["b"] * distance) / 10)
+    return round(base_price +
+                 distance_range["a"] +
+                 (distance_range["b"] *
+                  distance) /
+                 10)
 
-def calculate_surcharge(order_minimum_no_surcharge: int, cart_value: int) -> int:
+
+def calculate_surcharge(
+        order_minimum_no_surcharge: int,
+        cart_value: int) -> int:
     """Calculates the surcharge,
        this is the difference between order_minimum_no_surcharge and cart value.
-    
+
     Parameters:
     - order_minimum_no_surcharge: The surcharge base value.
     - cart_value: The cart value.
@@ -67,7 +80,11 @@ def calculate_surcharge(order_minimum_no_surcharge: int, cart_value: int) -> int
     """
     return max(0, order_minimum_no_surcharge - cart_value)
 
-def calculate_total_price(delivery_fee: int, cart_value: int, surcharge: int) -> int:
+
+def calculate_total_price(
+        delivery_fee: int,
+        cart_value: int,
+        surcharge: int) -> int:
     """Calculates the total fee which is a sum of delivery fee, cart value and
        surchage (if applied).
 

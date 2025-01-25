@@ -1,16 +1,17 @@
-from typing_extensions import Annotated, Dict
+from typing_extensions import Annotated, Dict, Any
 from fastapi import APIRouter, Query, Depends
 from schemas.delivery import DeliveryOrderSummary
-from services.api import fetch_full_venue_data
+from services.api import fetch_venue_coordinates, fetch_venue_dynamic_pricing
 from services.delivery import (
-    get_distance_range, 
-    calculate_delivery_fee, 
-    calculate_distance, 
-    calculate_surcharge, 
+    get_distance_range,
+    calculate_delivery_fee,
+    calculate_distance,
+    calculate_surcharge,
     calculate_total_price,
 )
 
 router = APIRouter()
+
 
 @router.get("/api/v1/delivery-order-price", response_model=DeliveryOrderSummary, responses={
     200: {
@@ -24,39 +25,39 @@ router = APIRouter()
                     "delivery": {
                         "fee": 190,
                         "distance": 177
-                        }
                     }
                 }
-            },
+            }
         },
+    },
     400: {
-            "description": "Bad request",
-            "content": {
-                "application/json": {
-                    "example": {
-                        "detail": "We are sorry, this location is currently outside our delivery range."
-                    },
+        "description": "Bad request",
+        "content": {
+            "application/json": {
+                "example": {
+                    "detail": "We are sorry, this location is currently outside our delivery range."
                 },
             },
         },
+    },
     422: {
-            "description": "Validation error or missing parameters",
-            "content": {
-                "application/json": {
-                    "example": {
-                        "status": "error",
-                        "error_count": 1,
-                        "errors": [
-                            {
+        "description": "Validation error or missing parameters",
+        "content": {
+            "application/json": {
+                "example": {
+                    "status": "error",
+                    "error_count": 1,
+                    "errors": [
+                        {
                             "field": "query.user_lon",
                             "error_type": "missing",
                             "message": "user_lon is required."
-                            },
-                        ]
-                    }
+                        },
+                    ]
                 }
-            },
+            }
         },
+    },
 })
 async def get_delivery_order_price(
     cart_value: Annotated[
@@ -71,7 +72,8 @@ async def get_delivery_order_price(
         float,
         Query(ge=-180, le=180)
     ],
-    venue_data: Dict[str, Dict] = Depends(fetch_full_venue_data), # inheritely leverages param ?venue_slug=.... 
+    venue_location: Dict[Any, Dict] = Depends(fetch_venue_coordinates),
+    venue_pricing: Dict[Any, Dict] = Depends(fetch_venue_dynamic_pricing)
 ):
     """Fetches a delivery order price based on the venue, cart value, and user location.
 
@@ -83,16 +85,19 @@ async def get_delivery_order_price(
     Returns:
       - JSON containing the final total price, small order surcharge, cart value, and delivery details (fee, distance).
     """
-    venue_static_data, venue_dynamic_data = venue_data["static"], venue_data["dynamic"]
+    surcharge = calculate_surcharge(
+        venue_pricing["order_minimum_no_surcharge"], cart_value)
 
-    venue_location = venue_static_data["venue_raw"]["location"]["coordinates"]
-    base_price = venue_dynamic_data["venue_raw"]["delivery_specs"]["delivery_pricing"]["base_price"]
-    distance_ranges = venue_dynamic_data["venue_raw"]["delivery_specs"]["delivery_pricing"]["distance_ranges"]
-    order_minimum_no_surcharge = venue_dynamic_data["venue_raw"]["delivery_specs"]["order_minimum_no_surcharge"]
+    distance = calculate_distance(
+        user_lon,
+        user_lat,
+        venue_location[0],
+        venue_location[1])
 
-    surcharge = calculate_surcharge(order_minimum_no_surcharge, cart_value)
-    distance = calculate_distance(user_lon, user_lat , venue_location[0], venue_location[1])
-    delivery_fee = calculate_delivery_fee(base_price, distance, get_distance_range(distance, distance_ranges))
+    delivery_fee = calculate_delivery_fee(
+        venue_pricing["base_price"], distance, get_distance_range(
+            distance, venue_pricing["distance_ranges"]))
+
     total_price = calculate_total_price(delivery_fee, cart_value, surcharge)
 
     return {

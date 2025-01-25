@@ -9,7 +9,7 @@ There are two versions:
 1. Docker version: you have Docker installed (or you want to install it) - this is the painless way
 2. Manual version: if you like to suffer (or hate Docker for some reason)
 
-## 1. Docker version
+## 1. Installation (Docker version)
 
 You might need root user access for the commands to work (e.g. using sudo)
 
@@ -45,7 +45,7 @@ everything:
 docker exec -it dopc pytest /tests/
 ```
 
-## 2. Manual version
+## 2. Installation (Manual version)
 
 ### Create and run the virtual environment
 
@@ -69,7 +69,7 @@ pip install -r requirements.txt
 fastapi run main.py
 ```
 
-### Testing
+### Running tests (make sure server is running in the background)
 
 Make sure you are in virtual environment (check "Create and run the virtual environment" section how to enter venv) and that you run the command(s) from the root.
 

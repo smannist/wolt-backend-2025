@@ -13,7 +13,7 @@ AllowedVenues = Literal[
 ]
 
 
-def fetch_venue_coordinates(venue_slug: Annotated[
+async def fetch_venue_coordinates(venue_slug: Annotated[
     AllowedVenues,
     Query()
 ]) -> Dict:
@@ -28,9 +28,10 @@ def fetch_venue_coordinates(venue_slug: Annotated[
     )
 
 
-def fetch_venue_dynamic_pricing(venue_slug: Annotated[
+async def fetch_venue_dynamic_pricing(venue_slug: Annotated[
         AllowedVenues,
-        Query()]) -> Dict[str, Union[int, List[Dict]]]:
+        Query()
+]) -> Dict[str, Union[int, List[Dict]]]:
     """Fetches dynamic venue data and returns a pydantic object containing pricing details"""
     url = f"{BASE_URL}/{venue_slug}/dynamic"
     response = requests.get(url)

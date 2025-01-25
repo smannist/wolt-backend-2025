@@ -15,12 +15,11 @@ def get_distance_range(distance: float, distance_ranges: list[dict]) -> dict:
     for range_item in distance_ranges:
         min_distance = range_item["min"]
         max_distance = range_item["max"]
-
         if min_distance <= distance < max_distance:
             return range_item
     raise OutOfRangeException(
         status_code=400,
-        detail="We are sorry, this location is currently outside our delivery range.")
+        message="We are sorry, this location is currently outside our delivery range.")
 
 
 def calculate_distance(
@@ -91,8 +90,5 @@ def calculate_total_price(
     - The total delivery price
     """
     if cart_value <= 0:
-        raise EmptyCartException(
-            status_code=400,
-            detail="The cart is empty!"
-        )
+        raise EmptyCartException(status_code=400, message="The cart is empty!")
     return delivery_fee + cart_value + surcharge

@@ -1,6 +1,6 @@
 import requests
 from fastapi import Query
-from typing_extensions import Dict, Annotated, Literal, Union, List
+from typing_extensions import Dict, Annotated, Literal
 from schemas.venue import VenueLocation, VenuePricing
 
 BASE_URL = "https://consumer-api.development.dev.woltapi.com/home-assignment-api/v1/venues"
@@ -16,7 +16,7 @@ AllowedVenues = Literal[
 async def fetch_venue_coordinates(venue_slug: Annotated[
     AllowedVenues,
     Query()
-]) -> Dict:
+]) -> VenueLocation:
     """Fetches static coordinates of the venue return pydantic object with the coordinates"""
     url = f"{BASE_URL}/{venue_slug}/static"
     response = requests.get(url)
@@ -28,10 +28,10 @@ async def fetch_venue_coordinates(venue_slug: Annotated[
     )
 
 
-async def fetch_venue_dynamic_pricing(venue_slug: Annotated[
+async def fetch_venue_pricing(venue_slug: Annotated[
         AllowedVenues,
         Query()
-]) -> Dict[str, Union[int, List[Dict]]]:
+]) -> VenuePricing:
     """Fetches dynamic venue data and returns a pydantic object containing pricing details"""
     url = f"{BASE_URL}/{venue_slug}/dynamic"
     response = requests.get(url)

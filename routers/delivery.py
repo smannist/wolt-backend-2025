@@ -1,7 +1,8 @@
-from typing_extensions import Annotated, Dict, Any
+from typing_extensions import Annotated
 from fastapi import APIRouter, Query, Depends
 from schemas.delivery import DeliveryOrderSummary
-from services.api import fetch_venue_coordinates, fetch_venue_dynamic_pricing
+from schemas.venue import VenueLocation, VenuePricing
+from services.api_fetchers import fetch_venue_coordinates, fetch_venue_pricing
 from services.delivery import (
     get_distance_range,
     calculate_delivery_fee,
@@ -72,8 +73,8 @@ async def get_delivery_order_price(
         float,
         Query(ge=-180, le=180)
     ],
-    VenueLocation: Dict[Any, Dict] = Depends(fetch_venue_coordinates),
-    VenuePricing: Dict[Any, Dict] = Depends(fetch_venue_dynamic_pricing)
+    venue_location: VenueLocation = Depends(fetch_venue_coordinates),
+    venue_pricing: VenuePricing = Depends(fetch_venue_pricing)
 ):
     """Fetches a delivery order price based on the venue, cart value, and user location.
 
@@ -86,18 +87,18 @@ async def get_delivery_order_price(
       - JSON containing the final total price, small order surcharge, cart value, and delivery details (fee, distance).
     """
     surcharge = calculate_surcharge(
-        VenuePricing.order_minimum_no_surcharge, cart_value)
+        venue_pricing.order_minimum_no_surcharge, cart_value)
 
     distance = calculate_distance(
         user_lon,
         user_lat,
-        VenueLocation.lon,
-        VenueLocation.lat
+        venue_location.lon,
+        venue_location.lat
     )
 
     delivery_fee = calculate_delivery_fee(
-        VenuePricing.base_price, distance, get_distance_range(
-            distance, VenuePricing.distance_ranges))
+        venue_pricing.base_price, distance, get_distance_range(
+            distance, venue_pricing.distance_ranges))
 
     total_price = calculate_total_price(delivery_fee, cart_value, surcharge)
 

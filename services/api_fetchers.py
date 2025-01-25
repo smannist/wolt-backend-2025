@@ -29,8 +29,8 @@ async def fetch_venue_coordinates(venue_slug: Annotated[
 
 
 async def fetch_venue_pricing(venue_slug: Annotated[
-        AllowedVenues,
-        Query()
+    AllowedVenues,
+    Query()
 ]) -> VenuePricing:
     """Fetches dynamic venue data and returns a pydantic object containing pricing details"""
     url = f"{BASE_URL}/{venue_slug}/dynamic"

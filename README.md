@@ -6,8 +6,8 @@ My DOPC API solution for a chance to get an interview with the best Finnish comp
 
 There are two versions:
 
-1. Docker version: you have Docker installed (or you want to install it) - this is the painless way
-2. Manual version: if you like to suffer (or hate Docker for some reason)
+1. Docker version (if you have Docker installed)
+2. Manual version (without Docker)
 
 ## 1. Installation (Docker version)
 

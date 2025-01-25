@@ -1,24 +1,34 @@
+query_errors = [
+    {
+        "field": "query.venue_slug",
+        "error_type": "missing",
+        "message": "venue_slug is required."
+    },
+    {
+        "field": "query.cart_value",
+        "error_type": "missing",
+        "message": "cart_value is required."
+    },
+    {
+        "field": "query.user_lat",
+        "error_type": "missing",
+        "message": "user_lat is required."
+    },
+    {
+        "field": "query.user_lon",
+        "error_type": "missing",
+        "message": "user_lon is required."
+    },
+]
+
 
 def test_endpoint_returns_correct_error_with_all_missing_query_parameters(
         test_client):
     """Tests that the API returns status code 400 with an error indicating that all parameters are missing"""
     response = test_client.get("/api/v1/delivery-order-price")
-    expected_errors = [{"field": "query.venue_slug",
-                        "error_type": "missing",
-                        "message": "venue_slug is required."},
-                       {"field": "query.cart_value",
-                        "error_type": "missing",
-                        "message": "cart_value is required."},
-                       {"field": "query.user_lat",
-                        "error_type": "missing",
-                        "message": "user_lat is required."},
-                       {"field": "query.user_lon",
-                        "error_type": "missing",
-                        "message": "user_lon is required."},
-                       ]
     assert response.status_code == 422
-    for expected_error in expected_errors:
-        assert expected_error in response.json()["errors"]
+    for query_error in query_errors:
+        assert query_error in response.json()["errors"]
 
 
 def test_endpoint_returns_correct_error_with_missing_query_user_lon_param(

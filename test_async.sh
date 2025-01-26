@@ -1,0 +1,1 @@
+wrk -t2 -c2 -d30s -s slow.lua --latency "http://localhost:8000/api/v1/delivery-order-price?venue_slug=home-assignment-venue-helsinki&cart_value=1000&user_lat=60.17094&user_lon=24.93087"

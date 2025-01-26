@@ -1,24 +1,17 @@
 import pytest
 import asyncio
-from unittest.mock import AsyncMock
 from fastapi.testclient import TestClient
-from main import app
+from fastapi import Request
+from main import app as test_app
+from services.api_fetchers import fetch_venue_coordinates, fetch_venue_pricing
+from schemas.venue import VenueLocation, VenuePricing
+from tests.delivery_constants import HELSINKI_VENUE_LAT, HELSINKI_VENUE_LON, DISTANCE_RANGES, BASE_PRICE, ORDER_MINIMUM_NO_SURCHARGE
 
 
-@pytest.fixture(scope="function")
-def test_client():
-    """Fixture to provide a test client for the FastAPI app."""
-    with TestClient(app) as client:
-        yield client
-
-
-@pytest.fixture(scope="function")
-async def mock_aio_session(monkeypatch):
-    """Fixture to mock the aiohttp client session."""
-    mock_session = AsyncMock()
-    monkeypatch.setattr("aiohttp.ClientSession")
-    app.state.aio_session = mock_session
-    yield mock_session
+@pytest.fixture
+def app():
+    """Fixture app instance for mocking"""
+    return test_app
 
 
 @pytest.fixture(scope="function")
@@ -29,7 +22,37 @@ def event_loop():
     loop.close()
 
 
+@pytest.fixture(scope="function")
+def test_client():
+    """Fixture to provide a test client for the FastAPI app."""
+    with TestClient(test_app) as client:
+        yield client
+
+
 @pytest.fixture
 def anyio_backend():
     """Make AnyIO tests only with asyncio"""
     return "asyncio"
+
+
+@pytest.fixture
+def mock_delivery_route_dependencies(app):
+    async def mock_fetch_venue_coordinates(
+            request: Request,
+            venue_slug: str) -> VenueLocation:
+        return VenueLocation(
+            lon=HELSINKI_VENUE_LON,
+            lat=HELSINKI_VENUE_LAT
+        )
+    async def mock_fetch_venue_pricing(
+            request: Request,
+            venue_slug: str) -> VenuePricing:
+        return VenuePricing(
+            base_price=BASE_PRICE,
+            order_minimum_no_surcharge=ORDER_MINIMUM_NO_SURCHARGE,
+            distance_ranges=DISTANCE_RANGES
+        )
+    app.dependency_overrides[fetch_venue_coordinates] = mock_fetch_venue_coordinates
+    app.dependency_overrides[fetch_venue_pricing] = mock_fetch_venue_pricing
+    yield
+    app.dependency_overrides.clear()

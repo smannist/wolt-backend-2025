@@ -4,7 +4,7 @@ from schemas.venue import VenueLocation, VenuePricing
 
 BASE_URL = "https://consumer-api.development.dev.woltapi.com/home-assignment-api/v1/venues"
 
-AllowedVenues = Literal[
+ALLOWED_VENUES = Literal[
     "home-assignment-venue-helsinki",
     "home-assignment-venue-stockholm",
     "home-assignment-venue-berlin",
@@ -15,7 +15,7 @@ AllowedVenues = Literal[
 async def fetch_venue_coordinates(
     request: Request,
     venue_slug: Annotated[
-        AllowedVenues,
+        ALLOWED_VENUES,
         Query()
     ]
 ) -> VenueLocation:
@@ -33,7 +33,7 @@ async def fetch_venue_coordinates(
 async def fetch_venue_pricing(
     request: Request,
     venue_slug: Annotated[
-        AllowedVenues,
+        ALLOWED_VENUES,
         Query()
     ]
 ) -> VenuePricing:

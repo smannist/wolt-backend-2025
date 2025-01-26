@@ -65,8 +65,14 @@ async def get_delivery_order_price(
         float,
         Query(ge=-180, le=180)
     ],
-    venue_location: VenueLocation = Depends(fetch_venue_coordinates),
-    venue_pricing: VenuePricing = Depends(fetch_venue_pricing)
+    venue_location: Annotated[
+        VenueLocation,
+        Depends(fetch_venue_coordinates)
+    ],
+    venue_pricing: Annotated[
+        VenuePricing,
+        Depends(fetch_venue_pricing)
+    ]
 ):
     """Fetches a delivery order price based on the venue, cart value, and user location.
 

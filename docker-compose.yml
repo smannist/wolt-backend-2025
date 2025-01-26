@@ -1,8 +1,10 @@
 services:
-  backend:
+  dopc:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: dopc
+    volumes:
+      - ./tests:/tests
     ports:
       - "8000:8000"

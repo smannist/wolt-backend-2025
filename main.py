@@ -1,3 +1,5 @@
+import aiohttp
+from contextlib import asynccontextmanager
 from typing import Callable
 from fastapi import FastAPI, Request, status
 from fastapi.responses import JSONResponse
@@ -5,7 +7,14 @@ from fastapi.exceptions import RequestValidationError
 from exceptions import DOPCApiError, OutOfRangeException, EmptyCartException
 from routers import delivery
 
-app = FastAPI()
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    app.state.aio_session = aiohttp.ClientSession()
+    yield
+    await app.state.aio_session.close()
+
+app = FastAPI(lifespan=lifespan)
 
 app.include_router(delivery.router)
 
@@ -27,6 +36,30 @@ def create_exception_handler(
     return exception_handler
 
 
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(
+        _: Request, exc: RequestValidationError):
+    missing_params = [
+        param["loc"][1] for param in exc.errors() if param["type"] == "missing"
+    ]
+    invalid_venue = {param["input"]
+                     for param in exc.errors() if param["type"] == "literal_error"}
+
+    error_messages = []
+    if missing_params:
+        error_messages.append(
+            f"Missing query parameters: {', '.join(missing_params)}"
+        )
+    if invalid_venue:
+        error_messages.append(
+            f"Invalid venue: {', '.join(invalid_venue)}"
+        )
+
+    return JSONResponse(
+        content={"detail": "; ".join(error_messages)},
+        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+    )
+
 app.add_exception_handler(
     exc_class_or_status_code=OutOfRangeException,
     handler=create_exception_handler(
@@ -40,31 +73,3 @@ app.add_exception_handler(
         status.HTTP_400_BAD_REQUEST, "The cart is empty!"
     ),
 )
-
-
-@app.exception_handler(RequestValidationError)
-async def validation_exception_handler(
-        _: Request, exc: RequestValidationError):
-    missing_params = [
-        param["loc"][1] for param in exc.errors() if param["type"] == "missing"
-    ]
-    invalid_venue = {
-        param["input"] for param in exc.errors() if param["type"] == "literal_error"
-    }
-
-    error_messages = []
-    if missing_params:
-        error_messages.append(
-            f"Missing query parameters: {
-                ', '.join(missing_params)}"
-            )
-    if invalid_venue:
-        error_messages.append(
-            f"Invalid venue: {
-                ", {invalid_venue}"}"
-            )
-
-    return JSONResponse(
-        content={"detail": "; ".join(error_messages)},
-        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-    )

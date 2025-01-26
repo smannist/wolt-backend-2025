@@ -37,6 +37,7 @@ def anyio_backend():
 
 @pytest.fixture
 def mock_delivery_route_dependencies(app):
+    """Fixture for mocking FastAPI get_delivery_order_price dependencies, which call an external API"""
     async def mock_fetch_venue_coordinates(
             request: Request,
             venue_slug: str) -> VenueLocation:

@@ -1,4 +1,5 @@
 from exceptions import OutOfRangeException, EmptyCartException
+from tests.delivery_constants import DISTANCE_RANGES
 from services.delivery import (
     get_distance_range,
     calculate_delivery_fee,
@@ -7,38 +8,31 @@ from services.delivery import (
     calculate_total_price
 )
 
-DISTANCE_RANGES = [
-    {"min": 0, "max": 1000, "a": 100, "b": 1},
-    {"min": 1000, "max": 5000, "a": 250, "b": 2},
-    {"min": 5000, "max": 10000, "a": 350, "b": 3},
-    {"min": 10000, "max": 0, "a": 0, "b": 0},
-]
-
 
 def test_distance_range_is_selected_correctly_with_inclusive_min_range():
     """Tests that the selected distance falls on the correct range when the distance is exactly within inclusive minimum range."""
     assert get_distance_range(0, DISTANCE_RANGES) == DISTANCE_RANGES[0]
-    assert get_distance_range(1000, DISTANCE_RANGES) == DISTANCE_RANGES[1]
-    assert get_distance_range(5000, DISTANCE_RANGES) == DISTANCE_RANGES[2]
+    assert get_distance_range(1000, DISTANCE_RANGES) == DISTANCE_RANGES[2]
+    assert get_distance_range(1500, DISTANCE_RANGES) == DISTANCE_RANGES[3]
 
 
 def test_distance_range_is_selected_correctly_with_exclusive_max_range():
     """Tests that the selected distance falls on the correct range when the distance is slightly below the maximum range."""
-    assert get_distance_range(999, DISTANCE_RANGES) == DISTANCE_RANGES[0]
-    assert get_distance_range(4999, DISTANCE_RANGES) == DISTANCE_RANGES[1]
-    assert get_distance_range(9999, DISTANCE_RANGES) == DISTANCE_RANGES[2]
+    assert get_distance_range(499, DISTANCE_RANGES) == DISTANCE_RANGES[0]
+    assert get_distance_range(999, DISTANCE_RANGES) == DISTANCE_RANGES[1]
+    assert get_distance_range(1499, DISTANCE_RANGES) == DISTANCE_RANGES[2]
 
 
 def test_delivery_fee_is_calculated_correctly():
     """Tests that the delivery free is calculated correctly with given parameters.
 
     - Formula: base_price + a + (b * distance) / 10
-    - Expected: 199 + 100 + 1 * 600 / 10 = 359
+    - Expected: 199 + 100 + 0 * 600 / 10 = 299
     """
     base_price = 199
     distance = 600
     assert calculate_delivery_fee(
-        base_price, distance, DISTANCE_RANGES[0]) == 359
+        base_price, distance, DISTANCE_RANGES[1]) == 299
 
 
 def test_distance_is_calculated_correctly():

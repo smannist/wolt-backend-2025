@@ -39,9 +39,9 @@ def create_exception_handler(
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(
         _: Request, exc: RequestValidationError):
-    missing_params = [
+    missing_params = {
         param["loc"][1] for param in exc.errors() if param["type"] == "missing"
-    ]
+    }
     invalid_venue = {param["input"]
                      for param in exc.errors() if param["type"] == "literal_error"}
 
@@ -59,6 +59,7 @@ async def validation_exception_handler(
         content={"detail": "; ".join(error_messages)},
         status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
     )
+
 
 app.add_exception_handler(
     exc_class_or_status_code=OutOfRangeException,

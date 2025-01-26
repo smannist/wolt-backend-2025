@@ -2,16 +2,6 @@ import pytest
 
 
 @pytest.mark.anyio
-async def test_endpoint_returns_correct_error_with_all_missing_query_parameters(
-        test_client):
-    """Tests that the API returns status code 400 with an error indicating that all parameters are missing"""
-    response = test_client.get("/api/v1/delivery-order-price")
-    assert response.status_code == 422
-    assert response.json() == {
-        "detail": "Missing query parameters: venue_slug, venue_slug, cart_value, user_lat, user_lon"}
-
-
-@pytest.mark.anyio
 async def test_endpoint_returns_correct_error_with_missing_query_user_lon_param(
         test_client):
     """Tests that the API returns status code 400 with an error indication that single parameter is missing"""
@@ -21,6 +11,15 @@ async def test_endpoint_returns_correct_error_with_missing_query_user_lon_param(
     assert response.json() == {
         "detail": "Missing query parameters: user_lon"
     }
+
+
+@pytest.mark.anyio
+async def test_endpoint_returns_correct_error_with_all_missing_query_parameters(test_client):
+    """Tests that the API returns status code 422 with an error indicating that all parameters are missing"""
+    response = test_client.get("/api/v1/delivery-order-price")
+    assert response.status_code == 422
+    for param in ["user_lat", "user_lon", "cart_value", "venue_slug"]:
+        assert param in response.json()["detail"]
 
 
 @pytest.mark.anyio

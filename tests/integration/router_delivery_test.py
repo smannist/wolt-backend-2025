@@ -51,6 +51,7 @@ async def test_delivery_fee_is_returned_when_valid_query_parameters_are_present(
     response = test_client.get(
         "/api/v1/delivery-order-price?venue_slug=home-assignment-venue-helsinki&cart_value=1000&user_lat=60.17094&user_lon=24.93087"
     )
+    assert response.status_code == 200
     assert response.json() == {
         "total_price": 1190,
         "small_order_surcharge": 0,

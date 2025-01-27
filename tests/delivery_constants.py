@@ -1,6 +1,3 @@
-# for mocking the external endpoints
-# these dont need to be used for query parameter errors, since they are caught before the
-# external api is called
 BASE_PRICE = 190
 ORDER_MINIMUM_NO_SURCHARGE = 1000
 HELSINKI_VENUE_LON = 24.92813512

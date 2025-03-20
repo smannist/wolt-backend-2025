@@ -1,6 +1,6 @@
 # DOPC
 
-My DOPC API solution for a chance to get an interview with the best Finnish company ever created.
+Internship assigment task for Wolt Backend position written Python + FastAPI.
 
 ## Installing DOPC
 

@@ -1,6 +1,6 @@
 # DOPC
 
-Internship assigment task for Wolt Backend position written Python + FastAPI.
+Internship assigment task for Wolt backend position written in Python powered by FastAPI™.
 
 ## Installing DOPC
 
